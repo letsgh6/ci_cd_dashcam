@@ -1,6 +1,7 @@
 """CLI: uruchamia potok (DETR -> śledzenie -> głębia) na pliku wideo.
 
-Użycie: perception VIDEO [--out wynik.mp4] [--out-tracks tory.mp4] [--out-depth glebia.mp4] [--json wynik.json] [--no-depth] [--device cpu]
+Użycie: perception VIDEO [--out wynik.mp4] [--out-tracks tory.mp4] [--out-depth glebia.mp4]
+[--json wynik.json] [--no-depth] [--device cpu]
 """
 
 import argparse
