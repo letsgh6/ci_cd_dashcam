@@ -1,7 +1,7 @@
 """CLI: uruchamia potok (DETR -> śledzenie -> głębia) na pliku wideo.
 
-Użycie: perception VIDEO [--out wynik.mp4] [--out-tracks tory.mp4] [--out-depth glebia.mp4]
-[--json wynik.json] [--no-depth] [--device cpu]
+Użycie: perception VIDEO [--out wynik.mp4] [--out-tracks tory.mp4]
+[--out-depth glebia.mp4] [--json wynik.json] [--no-depth] [--device cpu]
 """
 
 import argparse
@@ -34,7 +34,10 @@ def draw(frame: np.ndarray, records: list[Record], id2label: dict[int, str]) -> 
 
 
 def draw_tracks(
-    frame: np.ndarray, by_frame: dict[int, list[Record]], index: int, id2label: dict[int, str]
+    frame: np.ndarray,
+    by_frame: dict[int, list[Record]],
+    index: int,
+    id2label: dict[int, str],
 ) -> np.ndarray:
     """Skrzynki + ślad toru (środek dolnej krawędzi skrzynki z klatek 0..index) na kopii klatki RGB."""
     vis = draw(frame, by_frame.get(index, []), id2label)
@@ -77,7 +80,11 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--out", type=Path, help="zapisz wideo z naniesionymi skrzynkami (mp4)")
     ap.add_argument("--out-tracks", type=Path, help="zapisz wideo z torami obiektów (mp4)")
     ap.add_argument("--out-depth", type=Path, help="zapisz wideo z mapą głębi (mp4)")
-    ap.add_argument("--json", type=Path, help="zapisz rekordy (klatka, id, klasa, box, near) do JSON")
+    ap.add_argument(
+        "--json",
+        type=Path,
+        help="zapisz rekordy (klatka, id, klasa, box, near) do JSON",
+    )
     ap.add_argument("--max-frames", type=int, default=180)
     ap.add_argument("--stride", type=int, default=4, help="bierz co N-tą klatkę")
     ap.add_argument("--width", type=int, default=960, help="szerokość po przeskalowaniu")
@@ -132,7 +139,9 @@ def main(argv: list[str] | None = None) -> int:
     if args.out:
         try:
             out_path = write_video(
-                args.out, [draw(f, by_frame.get(i, []), detector.id2label) for i, f in enumerate(frames)], fps
+                args.out,
+                [draw(f, by_frame.get(i, []), detector.id2label) for i, f in enumerate(frames)],
+                fps,
             )
         except (RuntimeError, ValueError) as exc:
             print(f"Nie udało się zapisać wideo: {exc}", file=sys.stderr)
@@ -141,7 +150,10 @@ def main(argv: list[str] | None = None) -> int:
     outputs = []
     if args.out_tracks:
         outputs.append(
-            (args.out_tracks, [draw_tracks(f, by_frame, i, detector.id2label) for i, f in enumerate(frames)])
+            (
+                args.out_tracks,
+                [draw_tracks(f, by_frame, i, detector.id2label) for i, f in enumerate(frames)],
+            )
         )
     if args.out_depth:
         outputs.append((args.out_depth, [depth_frame(d) for d in res.depth_maps]))

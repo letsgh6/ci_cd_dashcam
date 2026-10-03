@@ -1,10 +1,18 @@
-
 import numpy as np
 
 from perception.boxes import nms
 
 MODEL_ID = "facebook/detr-resnet-50"
-ROAD = {"person", "bicycle", "car", "motorcycle", "bus", "truck", "traffic light", "stop sign"}
+ROAD = {
+    "person",
+    "bicycle",
+    "car",
+    "motorcycle",
+    "bus",
+    "truck",
+    "traffic light",
+    "stop sign",
+}
 
 
 def filter_detections(

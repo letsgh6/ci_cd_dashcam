@@ -33,6 +33,8 @@ class DepthEstimator:
 
         d = self.pipe(Image.fromarray(img))["predicted_depth"]
         d = torch.nn.functional.interpolate(
-            d.float().cpu().reshape(1, 1, *d.shape[-2:]), size=img.shape[:2], mode="bicubic"
+            d.float().cpu().reshape(1, 1, *d.shape[-2:]),
+            size=img.shape[:2],
+            mode="bicubic",
         )[0, 0].numpy()
         return (d - d.min()) / (d.max() - d.min() + 1e-9)
